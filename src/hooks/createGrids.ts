@@ -1,4 +1,4 @@
-import { createStore, reconcile } from 'solid-js/store';
+import { createStore, produce, reconcile, SetStoreFunction } from 'solid-js/store';
 import { Config } from '~/hooks/ConfigContext';
 
 function deepClone<T>(value: T): T {
@@ -18,7 +18,15 @@ function createGrid(config: Config): string[][] {
 	]
 }
 
-export default function createGrids(config: Config) {
+export type GridsActions = {
+	restart: () => void,
+	recreate: () => void,
+	set: SetStoreFunction<string[][]>,
+	select: (index: number) => number | undefined
+}
+
+
+export default function createGrids(config: Config): [string[][], GridsActions] {
 	let gridSnap = createGrid(config);
 
 	const [grids, setGrids] = createStore(deepClone(gridSnap))
@@ -35,6 +43,29 @@ export default function createGrids(config: Config) {
 				restart();
 			},
 			set: setGrids,
+			select: (i) => {
+				const fills = grids[i];
+				if (config.selected == undefined) {
+					return fills.length ? i : undefined;
+				}
+				if (config.selected == i) {
+					return undefined;
+				}
+				console.log(fills.length, fills[0], grids[config.selected!][0]);
+				if (!fills.length || fills.length < 4 && fills[0] == grids[config.selected!][0]) {
+					setGrids(produce((draft) => {
+						const selectedArr = draft[config.selected!];
+						const curArr = draft[i!];
+						const color = selectedArr.shift()!;
+						while (selectedArr[0] == color && curArr.length < 3) {
+							console.log(selectedArr[0]);
+							curArr.unshift(selectedArr.shift()!);
+						}
+						curArr.unshift(color);
+					}))
+				}
+				return undefined;
+			}
 		}
-	] as const
+	]
 }

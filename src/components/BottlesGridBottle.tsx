@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { For } from 'solid-js';
 
-export default function Bottle(props: { fills: string[], onClick: () => void, isSelected: boolean }): JSXElement {
+export default function BottlesGridBottle(props: { fills: string[], onClick: () => void, isSelected: boolean }): JSXElement {
 	return (
 		<div
 			class={clsx(

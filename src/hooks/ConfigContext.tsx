@@ -5,7 +5,7 @@ export type Config = {
 	empty: number,
 	// willHidden?: boolean,
 	// hidden?: boolean
-	// selected?: number,
+	selected?: number,
 }
 
 type StoreTuple<T> = [get: Store<T>, set: SetStoreFunction<T>];
