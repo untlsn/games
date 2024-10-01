@@ -15,5 +15,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@iconify-json/ph": "^1.2.0"
   }
 }
