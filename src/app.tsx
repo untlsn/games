@@ -3,15 +3,12 @@ import '~/assets/style';
 import { produce } from 'solid-js/store';
 import Bottle from '~/components/Bottle';
 import createGrids from '~/hooks/createGrids';
+import { createConfig } from '~/hooks/ConfigContext';
 
 export default function App() {
-	const [colors, setColors] = createSignal<string[]>(['#FF0000', '#007F00', '#0000FF', '#FFA400', '#00FFFF', '#FFFF00']);
-	const [emptyCount, setEmptyCount] = createSignal(2);
+	const [config, setConfig] = createConfig();
 
-  const [grids, onGrids] = createGrids({
-		get colors() { return colors() },
-		get empty() { return emptyCount() },
-	})
+  const [grids, onGrids] = createGrids(config)
 	const [selected, setSelected] = createSignal<number>();
 	const isSelected = createSelector(selected);
 
@@ -61,18 +58,18 @@ export default function App() {
 			<div>
 				<h2>Colors:</h2>
 				<ul class="list-decimal">
-					<For each={colors()} children={(it, i) => (
+					<For each={config.colors} children={(it, i) => (
 						<li>
 							<input type="color" value={it} onChange={(ev) => {
-								const newColors = [...colors()]
-								newColors[i()] = ev.currentTarget.value
-								setColors(newColors)
+								setConfig('colors', produce(draft => {
+									draft[i()] = ev.currentTarget.value;
+								}))
 							}} />
 							<button
 								type="button"
 								class="i-ph-x mb-2"
 								onClick={() => {
-									setColors(colors().toSpliced(i(), 1))
+									setConfig('colors', it => it.toSpliced(i(), 1))
 								}}
 							>
 								Remove
@@ -81,7 +78,9 @@ export default function App() {
 					)}/>
 					<li class="list-none">
 						<button type="button" onClick={() => {
-							setColors([...colors(), '#ffffff'])
+							setConfig('colors', produce(draft => {
+								draft.push('#ffffff');
+							}))
 						}}>
 							Add
 						</button>
@@ -92,9 +91,9 @@ export default function App() {
 					<input
 						type="number"
 						class="border-1 rounded-md px-2 py-1 mt-2"
-						value={emptyCount()}
+						value={config.empty}
 						onChange={ev => {
-							setEmptyCount(ev.currentTarget.valueAsNumber)
+							setConfig('empty', ev.currentTarget.valueAsNumber)
 						}}
 					/>
 				</div>
