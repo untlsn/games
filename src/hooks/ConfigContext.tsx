@@ -1,4 +1,5 @@
 import { createStore, SetStoreFunction, Store } from 'solid-js/store';
+import { createContext, useContext } from 'solid-js';
 
 export type Config = {
 	colors: string[],
@@ -16,3 +17,13 @@ export function createConfig(): StoreTuple<Config> {
 		empty: 2,
 	})
 }
+
+const ConfigContext = createContext<StoreTuple<Config>>()
+
+export function useConfig() {
+	const res = useContext(ConfigContext);
+	if (!res) throw new Error('ConfigContext Provider is not present in tree')
+	return res;
+}
+
+export const ConfigProvider = ConfigContext.Provider;

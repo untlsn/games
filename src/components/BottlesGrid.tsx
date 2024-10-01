@@ -1,13 +1,13 @@
 import { createSelector, For } from 'solid-js';
 import BottlesGridBottle from '~/components/BottlesGridBottle';
-import { Config } from '~/hooks/ConfigContext';
+import { useConfig } from '~/hooks/ConfigContext';
 
 export default function BottlesGrid(props: {
 	grids: string[][],
-	config: Config,
 	onSelect: (index: number) => void
 }): JSXElement {
-	const isSelected = createSelector(() => props.config.selected);
+	const [config] = useConfig();
+	const isSelected = createSelector(() => config.selected);
 
 
 	return (
