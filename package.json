@@ -9,7 +9,9 @@
   "dependencies": {
     "@kobalte/core": "^0.13.7",
     "@solidjs/start": "^1.0.8",
+    "@un-tlsn/eslint": "^0.1.1",
     "clsx": "^2.1.1",
+    "eslint-plugin-solid": "^0.14.3",
     "solid-js": "^1.9.1",
     "unocss": "^0.63.1",
     "vinxi": "^0.4.3"
