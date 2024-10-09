@@ -67,7 +67,7 @@ export default function TheOptions(): JSXElement {
 									}));
 								}}
 							>
-								Add
+								Dodaj kolor
 							</button>
 						</li>
 					</ul>
