@@ -1,4 +1,4 @@
-import { For } from 'solid-js';
+import { For, Show } from 'solid-js';
 import { useConfig } from '~/hooks/ConfigContext';
 
 type Each = { hidden?: boolean, color: string, sign: string };
@@ -27,17 +27,24 @@ export default function BottlesGridBottle(props: { fills: string[], onClick: () 
 
 	return (
 		<div
-			class="h-40 w-10 border-(2 t-0 white/30) rounded-b-full grid-(~ rows-4) gap-1 p-2px transition-all last:children:rounded-b-full aria-[selected=true]:-translate-y-12 not-empty:cursor-pointer aria-[disabled=true]:opacity-30"
+			class="h-40 w-10 border-(2 t-0 white/30) rounded-b-full grid-(~ rows-4) gap-1 p-2px transition-all last:children:rounded-b-full aria-[selected=true]:-translate-y-12 not-empty:cursor-pointer aria-[disabled=true]:opacity-30 relative"
 			aria-selected={props.isSelected}
 			aria-disabled={props.isSuccess}
 			onClick={() => !props.isSuccess && props.onClick()}
 		>
+			<Show when={config.tap}>
+				<div class="i-my-tap absolute size-6 bottom-3 -right-6.5 bg-white/70" />
+			</Show>
 			<For
 				each={each()}
 				children={(it, i) => {
 					return (
 						<div
-							style={{ '--background-color': it.color, '--background-color-to': it.color + '66', '--start': 5 - props.fills.length + i() }}
+							style={{
+								'--background-color':    it.color,
+								'--background-color-to': it.color + '66',
+								'--start':               5 - props.fills.length + i(),
+							}}
 							class="text-center pt-2 row-start-[--start] bg-gradient-to-rb from-[--background-color] to-[--background-color-to]"
 							textContent={it.sign}
 						/>

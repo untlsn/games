@@ -16,7 +16,10 @@ export default function TheOptions(): JSXElement {
 
 	const submit = () => {
 		if (values.colors.length == new Set(values.colors).size) {
-			setConfig(values);
+			setConfig({
+				...values,
+				hidden: !values.tap && values.hidden,
+			});
 			onGrids.recreate();
 			setOpen(false);
 			return;
@@ -96,11 +99,17 @@ export default function TheOptions(): JSXElement {
 						checked={values.hidden}
 						onChange={(it) => setValues('hidden', it)}
 						label="Ukrywaj elementy"
+						disabledText={values.tap ? 'Ukrywanie elemenów w trybie syfonu nic nie robi' : ''}
 					/>
 					<OptionsCheckbox
 						checked={values.signed}
 						onChange={(it) => setValues('signed', it)}
 						label="Oznacz kolory"
+					/>
+					<OptionsCheckbox
+						checked={values.tap}
+						onChange={(it) => setValues('tap', it)}
+						label="Tryb syfonu"
 					/>
 					<TheOptionsRestart onClick={() => {
 						setValues(defaultConfig());
@@ -124,12 +133,13 @@ export default function TheOptions(): JSXElement {
 	);
 }
 
-function OptionsCheckbox(props: { checked?: boolean, onChange: (value: boolean) => void, label: string }): JSXElement {
+function OptionsCheckbox(props: { checked?: boolean, onChange: (value: boolean) => void, label: string, disabledText?: string }): JSXElement {
 	return (
-		<Checkbox checked={props.checked} onChange={props.onChange} class="mt-4 flex gap-2 items-center">
+		<Checkbox disabled={!!props.disabledText} checked={props.checked} onChange={props.onChange} class="mt-4 flex-(~ wrap) gap-2 items-center">
 			<Checkbox.Label>{props.label}: </Checkbox.Label>
 			<Checkbox.Input />
 			<Checkbox.Control class="i-ph-square data-[checked]:i-ph-check-square text-6" />
+			<p class="basis-full text-sm text-orange-4">{props.disabledText}</p>
 		</Checkbox>
 	);
 }

@@ -9,6 +9,7 @@ export type Config = {
 	hidden?:   boolean
 	selected?: number,
 	signed?:   boolean,
+	tap?:      boolean
 };
 
 type StoreTuple<T> = [get: Store<T>, set: SetStoreFunction<T>];

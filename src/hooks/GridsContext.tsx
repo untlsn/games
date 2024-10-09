@@ -60,14 +60,14 @@ function createGrids(): [Grids, GridsActions] {
 				if (config.selected == i) {
 					return undefined;
 				}
-				if (!fills.length || fills.length < 4 && fills[0] == grids[config.selected!][0]) {
+				if (!fills.length || fills.length < 4 && fills[0] == grids[config.selected!].at(config.tap ? -1 : 0)) {
 					gridUndos.push(copyStore(grids));
 					setGrids(produce((draft) => {
 						const selectedArr = draft[config.selected!];
 						const curArr = draft[i!];
-						const color = selectedArr.shift()!;
-						while (selectedArr[0] == color && curArr.length < 3) {
-							curArr.unshift(selectedArr.shift()!);
+						const color = config.tap ? selectedArr.pop()! : selectedArr.shift()!;
+						while (selectedArr.at(config.tap ? -1 : 0) == color && curArr.length < 3) {
+							curArr.unshift(config.tap ? selectedArr.pop()! : selectedArr.shift()!);
 						}
 						curArr.unshift(color);
 					}));
