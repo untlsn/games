@@ -1,6 +1,6 @@
-import { For } from 'solid-js';
+import { createSignal, For } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
-import { useConfig } from '~/hooks/ConfigContext';
+import { defaultConfig, useConfig } from '~/hooks/ConfigContext';
 import { Dialog } from '@kobalte/core/dialog';
 import { NumberField } from '@kobalte/core/number-field';
 import { Checkbox } from '@kobalte/core/checkbox';
@@ -82,12 +82,16 @@ export default function TheOptions(): JSXElement {
 							value={values.empty}
 						/>
 					</NumberField>
-					<Checkbox defaultChecked={values.hidden} onChange={(it) => setValues('hidden', it)} class="mt-4 flex gap-2 items-center">
+					<Checkbox checked={values.hidden} onChange={(it) => setValues('hidden', it)} class="mt-4 flex gap-2 items-center">
 						<Checkbox.Label>Ukrywaj elementy: </Checkbox.Label>
 						<Checkbox.Input />
 						<Checkbox.Control class="i-ph-square data-[checked]:i-ph-check-square text-6" />
 					</Checkbox>
-					<div class="mt-auto flex justify-evenly">
+					<TheOptionsRestart onClick={() => {
+						setValues(defaultConfig());
+					}}
+					/>
+					<div class="flex justify-evenly">
 						<Dialog.CloseButton
 							type="button"
 							class="border-(~ y-white/50 x-white/10) px-4 py-2 rounded hocus:bg-white/20 transition-colors"
@@ -102,5 +106,28 @@ export default function TheOptions(): JSXElement {
 				</Dialog.Content>
 			</Dialog.Portal>
 		</Dialog>
+	);
+}
+
+function TheOptionsRestart(props: { onClick: () => void }): JSXElement {
+	const [clicked, setClicked] = createSignal(false);
+
+	return (
+		<div class="mt-auto mb-4 text-center">
+			<button
+				type="button"
+				onClick={() => {
+					if (!clicked()) {
+						setClicked(true);
+						return;
+					}
+					setClicked(false);
+					props.onClick();
+				}}
+				class="border-(~ y-white/50 x-white/10) px-4 py-2 rounded hocus:bg-white/20 transition-colors w-48"
+			>
+				{clicked() ? 'Potwierdź' : 'Zrestartuj ustawienia'}
+			</button>
+		</div>
 	);
 }

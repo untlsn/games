@@ -12,20 +12,20 @@ export type Config = {
 
 type StoreTuple<T> = [get: Store<T>, set: SetStoreFunction<T>];
 
-export const defaultConfig: Readonly<Config> = {
+export const defaultConfig = (): Readonly<Config> => ({
 	colors: ['#FF0000', '#007F00', '#0000FF', '#FFA400', '#00FFFF', '#FFFF00'],
 	empty:  2,
 	hidden: false,
-};
+});
 
 const bottlesConfigKey = 'bottles::config';
 
 function getInitialStorage(): Config {
 	try {
 		const storageConfig = localStorage.getItem(bottlesConfigKey);
-		return storageConfig ? JSON.parse(storageConfig) : { ...defaultConfig };
+		return storageConfig ? JSON.parse(storageConfig) : defaultConfig();
 	} catch {
-		return { ...defaultConfig };
+		return defaultConfig();
 	}
 }
 
