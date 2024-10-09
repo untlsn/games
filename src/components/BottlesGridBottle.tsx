@@ -1,35 +1,41 @@
-import clsx from 'clsx';
 import { For } from 'solid-js';
 import { useConfig } from '~/hooks/ConfigContext';
 
-export default function BottlesGridBottle(props: { fills: string[], onClick: () => void, isSelected: boolean }): JSXElement {
+export default function BottlesGridBottle(props: { fills: string[], onClick: () => void, isSelected: boolean, isSuccess?: boolean }): JSXElement {
 	const [config] = useConfig();
+
+	const each = () => {
+		if (!config.hidden) return props.fills.map((color): { hidden?: boolean, color: string } => ({ color }));
+		const res: { hidden?: boolean, color: string }[] = [];
+
+		for (const color of props.fills) {
+			const last = res[res.length - 1];
+			const hidden = last && (last.hidden || last.color != color);
+			res.push({
+				color: hidden ? '#61397c' : color,
+				hidden,
+			});
+		}
+
+		return res;
+	};
 
 	return (
 		<div
-			class={clsx(
-				'h-40 w-10 border-(2 t-0 white/30) rounded-b-full grid-(~ rows-4) gap-1 p-2px transition-transform last:children:rounded-b-full',
-				props.isSelected && '-translate-y-12',
-				props.fills.length && 'cursor-pointer',
-			)}
-			onClick={() => props.onClick()}
+			class="h-40 w-10 border-(2 t-0 white/30) rounded-b-full grid-(~ rows-4) gap-1 p-2px transition-all last:children:rounded-b-full aria-[selected=true]:-translate-y-12 not-empty:cursor-pointer aria-[disabled=true]:opacity-30"
+			aria-selected={props.isSelected}
+			aria-disabled={props.isSuccess}
+			onClick={() => !props.isSuccess && props.onClick()}
 		>
-			<For each={Array(4 - props.fills.length)} children={() => <div />} />
 			<For
-				each={props.fills}
-				children={(color, i) => {
+				each={each()}
+				children={(it, i) => {
 					return (
 						<div
-							style={{ '--background-color': color, '--background-color-to': color + '66' }}
-							class={clsx(
-								'text-center pt-2',
-								!config.hidden || i() == 0 || (color == props.fills[0] && color == props.fills[i() - 1])
-									? 'bg-gradient-to-rb from-[--background-color] to-[--background-color-to] text-transparent'
-									: 'bg-gradient-to-br from-[#61397c] to-[#2f205e]',
-							)}
-						>
-							?
-						</div>
+							style={{ '--background-color': it.color, '--background-color-to': it.color + '66', '--start': 5 - props.fills.length + i() }}
+							class="text-center pt-2 row-start-[--start] bg-gradient-to-rb from-[--background-color] to-[--background-color-to]"
+							textContent={it.hidden ? '?' : ''}
+						/>
 					);
 				}}
 			/>
