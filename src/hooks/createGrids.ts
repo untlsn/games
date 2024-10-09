@@ -2,6 +2,7 @@ import type { SetStoreFunction } from 'solid-js/store';
 import { createStore, produce, reconcile } from 'solid-js/store';
 import type { Config } from '~/hooks/ConfigContext';
 import copyStore from '~/utils/copyStore';
+import { createContext, useContext } from 'solid-js';
 
 function createGrid(config: Config): string[][] {
 	const availableColors = config.colors.flatMap((it) => Array(4).fill(it) as string[]);
@@ -16,16 +17,17 @@ function createGrid(config: Config): string[][] {
 	];
 }
 
+export type Grids = string[][];
 export type GridsActions = {
 	restart:  () => void,
 	recreate: () => void,
 	undo:     () => void
-	set:      SetStoreFunction<string[][]>,
+	set:      SetStoreFunction<Grids>,
 	select:   (index: number) => number | undefined
 };
 
 
-export default function createGrids(config: Config): [string[][], GridsActions] {
+export default function createGrids(config: Config): [Grids, GridsActions] {
 	let gridSnap = createGrid(config);
 	const gridUndos = [gridSnap];
 
@@ -72,4 +74,15 @@ export default function createGrids(config: Config): [string[][], GridsActions] 
 			},
 		},
 	];
+}
+
+const GridsContext = createContext<[Grids, GridsActions]>();
+
+export const GridsProvider = GridsContext.Provider;
+
+export function useGrids(): [Grids, GridsActions] {
+	const context = useContext(GridsContext);
+	if (!context) throw new Error('GridsContext Provider is not present in tree');
+
+	return context;
 }
