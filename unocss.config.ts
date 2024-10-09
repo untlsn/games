@@ -12,6 +12,9 @@ import {
 
 export default defineConfig({
 	theme: {
+		zIndex: {
+			top: 999,
+		}
 	},
 	shortcuts: [
 		// hocus:bg-black -> hover:bg-black focus:bg-black

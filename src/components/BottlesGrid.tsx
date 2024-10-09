@@ -11,7 +11,7 @@ export default function BottlesGrid(props: {
 
 
 	return (
-		<main class="grid-(~ cols-fit-20) gap-4 size-50vh mx-auto">
+		<main class="grid-(~ cols-fit-20) place-items-center gap-4 w-full p-4">
 			<For each={props.grids} children={(fills, i) => (
 				<BottlesGridBottle
 					fills={fills}

@@ -3,7 +3,6 @@ import createGrids from '~/hooks/createGrids';
 import { ConfigProvider, createConfig } from '~/hooks/ConfigContext';
 import RestoreButtons from '~/components/RestoreButtons';
 import BottlesGrid from '~/components/BottlesGrid';
-import TheOptions from '~/components/TheOptions';
 
 export default function App() {
 	const [config, setConfig] = createConfig();
@@ -11,13 +10,13 @@ export default function App() {
 
   return (
 		<ConfigProvider value={[config, setConfig]}>
-			<div class="grid-(~ cols-1_2_1 rows-1_4) min-h-screen bg-[#121212] text-white">
-				<RestoreButtons onGrids={onGrids}/>
-				<div/>
-				<BottlesGrid grids={grids} onSelect={(i) => {
-					setConfig('selected', onGrids.select(i))
-				}}/>
-				<TheOptions />
+			<div class="min-h-screen bg-[#15051C] text-white grid place-items-center">
+				<div class="border-(~ white/10) bg-white/2 w-98vw max-w-240">
+					<RestoreButtons onGrids={onGrids}/>
+					<BottlesGrid grids={grids} onSelect={(i) => {
+						setConfig('selected', onGrids.select(i))
+					}}/>
+				</div>
 			</div>
 		</ConfigProvider>
 	);
