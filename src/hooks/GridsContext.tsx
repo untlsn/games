@@ -1,6 +1,7 @@
 import type { SetStoreFunction } from 'solid-js/store';
 import { createStore, produce, reconcile } from 'solid-js/store';
 import type { Config } from '~/hooks/ConfigContext';
+import { useConfig } from '~/hooks/ConfigContext';
 import copyStore from '~/utils/copyStore';
 import { createContext, useContext } from 'solid-js';
 
@@ -27,7 +28,8 @@ export type GridsActions = {
 };
 
 
-export default function createGrids(config: Config): [Grids, GridsActions] {
+function createGrids(): [Grids, GridsActions] {
+	const [config] = useConfig();
 	let gridSnap = createGrid(config);
 	const gridUndos = [gridSnap];
 
@@ -78,7 +80,13 @@ export default function createGrids(config: Config): [Grids, GridsActions] {
 
 const GridsContext = createContext<[Grids, GridsActions]>();
 
-export const GridsProvider = GridsContext.Provider;
+export function TheGridsProvider(props: { children: JSXElement }): JSXElement {
+	return (
+		<GridsContext.Provider value={createGrids()}>
+			{props.children}
+		</GridsContext.Provider>
+	);
+}
 
 export function useGrids(): [Grids, GridsActions] {
 	const context = useContext(GridsContext);

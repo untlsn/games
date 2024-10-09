@@ -1,5 +1,6 @@
 import type { SetStoreFunction, Store } from 'solid-js/store';
 import { createStore } from 'solid-js/store';
+import type { FlowProps } from 'solid-js';
 import { createContext, useContext } from 'solid-js';
 
 export type Config = {
@@ -11,7 +12,7 @@ export type Config = {
 
 type StoreTuple<T> = [get: Store<T>, set: SetStoreFunction<T>];
 
-export function createConfig(): StoreTuple<Config> {
+function createConfig(): StoreTuple<Config> {
 	// eslint-disable-next-line solid/reactivity
 	return createStore<Config>({
 		colors: ['#FF0000', '#007F00', '#0000FF', '#FFA400', '#00FFFF', '#FFFF00'],
@@ -28,4 +29,10 @@ export function useConfig(): StoreTuple<Config> {
 	return res;
 }
 
-export const ConfigProvider = ConfigContext.Provider;
+export function TheConfigProvider(props: FlowProps): JSXElement {
+	return (
+		<ConfigContext.Provider value={createConfig()}>
+			{props.children}
+		</ConfigContext.Provider>
+	);
+}

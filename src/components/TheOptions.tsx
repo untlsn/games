@@ -5,14 +5,16 @@ import { Dialog } from '@kobalte/core/dialog';
 import { NumberField } from '@kobalte/core/number-field';
 import { Checkbox } from '@kobalte/core/checkbox';
 import copyStore from '~/utils/copyStore';
+import { useGrids } from '~/hooks/GridsContext';
 
-export default function TheOptions(props: { recreate: () => void }): JSXElement {
+export default function TheOptions(): JSXElement {
 	const [config, setConfig] = useConfig();
+	const [,onGrids] = useGrids();
 	const [values, setValues] = createStore(copyStore(config));
 
 	const submit = () => {
 		setConfig(values);
-		props.recreate();
+		onGrids.recreate();
 	};
 
 	return (

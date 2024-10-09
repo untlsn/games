@@ -1,4 +1,4 @@
-import { useGrids } from '~/hooks/createGrids';
+import { useGrids } from '~/hooks/GridsContext';
 import TheOptions from '~/components/TheOptions';
 
 export default function TheMenuButtons(): JSXElement {
@@ -15,7 +15,7 @@ export default function TheMenuButtons(): JSXElement {
 			<button type="button" onClick={onGrids.recreate}>
 				Restart
 			</button>
-			<TheOptions recreate={onGrids.recreate} />
+			<TheOptions />
 		</nav>
 	);
 }

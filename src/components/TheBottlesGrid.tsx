@@ -1,7 +1,7 @@
 import { createSelector, For } from 'solid-js';
 import BottlesGridBottle from '~/components/BottlesGridBottle';
 import { useConfig } from '~/hooks/ConfigContext';
-import { useGrids } from '~/hooks/createGrids';
+import { useGrids } from '~/hooks/GridsContext';
 
 export default function TheBottlesGrid(): JSXElement {
 	const [config, setConfig] = useConfig();
