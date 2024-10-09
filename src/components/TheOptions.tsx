@@ -1,4 +1,4 @@
-import { createSignal, For } from 'solid-js';
+import { createSignal, For, Show } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 import { defaultConfig, useConfig } from '~/hooks/ConfigContext';
 import { Dialog } from '@kobalte/core/dialog';
@@ -11,20 +11,27 @@ export default function TheOptions(): JSXElement {
 	const [config, setConfig] = useConfig();
 	const [,onGrids] = useGrids();
 	const [values, setValues] = createStore(copyStore(config));
+	const [open, setOpen] = createSignal(false);
+	const [error, setError] = createSignal('');
 
 	const submit = () => {
-		setConfig(values);
-		onGrids.recreate();
+		if (values.colors.length == new Set(values.colors).size) {
+			setConfig(values);
+			onGrids.recreate();
+			setOpen(false);
+			return;
+		}
+		setError('Killka elementów ma ten sam kolor');
 	};
 
 	return (
-		<Dialog>
+		<Dialog open={open()} onOpenChange={setOpen}>
 			<Dialog.Trigger>
 				Opcje
 			</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Content
-					class="fixed inset-0 m-auto w-100 h-150 p-4 z-top text-white rounded bg-gradient-to-br from-([#2C1D33] 30%) to-[#2f205e]/70 border-(1 white/30) flex-(~ col)"
+					class="fixed inset-0 m-auto w-100 h-150 p-4 z-top text-white rounded bg-gradient-to-br from-([#2C1D33] 30%) to-[#2f205e]/70 border-(1 white/30) flex-(~ col) z-1"
 				>
 					<div class="flex justify-between text-xl mb-4">
 						<h2>Ustawienia</h2>
@@ -71,6 +78,9 @@ export default function TheOptions(): JSXElement {
 							</button>
 						</li>
 					</ul>
+					<Show when={error()}>
+						<p class="text-red-6 my-4">{error()}</p>
+					</Show>
 					<NumberField
 						class="mt-4"
 						onChange={(value) => setValues('empty', +value)}
@@ -82,23 +92,28 @@ export default function TheOptions(): JSXElement {
 							value={values.empty}
 						/>
 					</NumberField>
-					<Checkbox checked={values.hidden} onChange={(it) => setValues('hidden', it)} class="mt-4 flex gap-2 items-center">
-						<Checkbox.Label>Ukrywaj elementy: </Checkbox.Label>
-						<Checkbox.Input />
-						<Checkbox.Control class="i-ph-square data-[checked]:i-ph-check-square text-6" />
-					</Checkbox>
+					<OptionsCheckbox
+						checked={values.hidden}
+						onChange={(it) => setValues('hidden', it)}
+						label="Ukrywaj elementy"
+					/>
+					<OptionsCheckbox
+						checked={values.signed}
+						onChange={(it) => setValues('signed', it)}
+						label="Oznacz kolory"
+					/>
 					<TheOptionsRestart onClick={() => {
 						setValues(defaultConfig());
 					}}
 					/>
 					<div class="flex justify-evenly">
-						<Dialog.CloseButton
+						<button
 							type="button"
 							class="border-(~ y-white/50 x-white/10) px-4 py-2 rounded hocus:bg-white/20 transition-colors"
 							onClick={submit}
 						>
 							Potwierdź ustawienia
-						</Dialog.CloseButton>
+						</button>
 						<Dialog.CloseButton type="button" class="border-(~ y-white/50 x-white/10) px-4 py-2 rounded hocus:bg-white/20 transition-colors">
 							Anuluj
 						</Dialog.CloseButton>
@@ -106,6 +121,16 @@ export default function TheOptions(): JSXElement {
 				</Dialog.Content>
 			</Dialog.Portal>
 		</Dialog>
+	);
+}
+
+function OptionsCheckbox(props: { checked?: boolean, onChange: (value: boolean) => void, label: string }): JSXElement {
+	return (
+		<Checkbox checked={props.checked} onChange={props.onChange} class="mt-4 flex gap-2 items-center">
+			<Checkbox.Label>{props.label}: </Checkbox.Label>
+			<Checkbox.Input />
+			<Checkbox.Control class="i-ph-square data-[checked]:i-ph-check-square text-6" />
+		</Checkbox>
 	);
 }
 
