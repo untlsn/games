@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@kobalte/core": "^0.13.7",
+    "@solidjs/router": "^0.14.7",
     "@solidjs/start": "^1.0.8",
     "@un-tlsn/eslint": "^0.1.1",
     "clsx": "^2.1.1",

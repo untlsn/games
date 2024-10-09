@@ -1,20 +1,18 @@
 import '~/assets/style';
-import { TheGridsProvider } from '~/hooks/GridsContext';
-import { TheConfigProvider } from '~/hooks/ConfigContext';
-import TheMenuButtons from '~/components/TheMenuButtons';
-import TheBottlesGrid from '~/components/TheBottlesGrid';
+import { Router } from '@solidjs/router';
+import { FileRoutes } from '@solidjs/start/router';
+import { Suspense } from 'solid-js';
 
-export default function App(): JSXElement {
+export default function TheApp(): JSXElement {
 	return (
-		<TheConfigProvider>
-			<TheGridsProvider>
-				<div class="min-h-screen bg-[#15051C] text-white grid place-items-center">
-					<div class="border-(~ white/10) bg-white/2 w-98vw max-w-240">
-						<TheMenuButtons />
-						<TheBottlesGrid />
-					</div>
-				</div>
-			</TheGridsProvider>
-		</TheConfigProvider>
+		<Router
+			root={(props) => (
+				<Suspense>
+					{props.children}
+				</Suspense>
+			)}
+		>
+			<FileRoutes />
+		</Router>
 	);
 }
