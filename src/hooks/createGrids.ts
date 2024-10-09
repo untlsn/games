@@ -1,37 +1,37 @@
-import { createStore, produce, reconcile, SetStoreFunction } from 'solid-js/store';
-import { Config } from '~/hooks/ConfigContext';
-
-function deepClone<T>(value: T): T {
-	return JSON.parse(JSON.stringify(value))
-}
+import type { SetStoreFunction } from 'solid-js/store';
+import { createStore, produce, reconcile } from 'solid-js/store';
+import type { Config } from '~/hooks/ConfigContext';
+import copyStore from '~/utils/copyStore';
 
 function createGrid(config: Config): string[][] {
-	const availableColors = config.colors.flatMap(it => Array(4).fill(it) as string[]);
+	const availableColors = config.colors.flatMap((it) => Array(4).fill(it) as string[]);
 
 	return [
 		...config.colors.map(() => {
 			return Array.from({ length: 4 }, () => {
-				return availableColors.splice(Math.floor(Math.random() * availableColors.length), 1)[0]
-			})
+				return availableColors.splice(Math.floor(Math.random() * availableColors.length), 1)[0];
+			});
 		}),
-		...deepClone(Array(config.empty).fill([])),
-	]
+		...copyStore(Array(config.empty).fill([])),
+	];
 }
 
 export type GridsActions = {
-	restart: () => void,
+	restart:  () => void,
 	recreate: () => void,
-	set: SetStoreFunction<string[][]>,
-	select: (index: number) => number | undefined
-}
+	undo:     () => void
+	set:      SetStoreFunction<string[][]>,
+	select:   (index: number) => number | undefined
+};
 
 
 export default function createGrids(config: Config): [string[][], GridsActions] {
 	let gridSnap = createGrid(config);
+	const gridUndos = [gridSnap];
 
-	const [grids, setGrids] = createStore(deepClone(gridSnap))
+	const [grids, setGrids] = createStore(copyStore(gridSnap));
 
-	const restart = () => setGrids(reconcile(gridSnap))
+	const restart = () => setGrids(reconcile(gridSnap));
 
 
 	return [
@@ -42,7 +42,12 @@ export default function createGrids(config: Config): [string[][], GridsActions] 
 				gridSnap = createGrid(config);
 				restart();
 			},
-			set: setGrids,
+			set:  setGrids,
+			undo: () => {
+				const last = gridUndos.pop();
+				if (!last) return;
+				setGrids(last);
+			},
 			select: (i) => {
 				const fills = grids[i];
 				if (config.selected == undefined) {
@@ -51,21 +56,20 @@ export default function createGrids(config: Config): [string[][], GridsActions] 
 				if (config.selected == i) {
 					return undefined;
 				}
-				console.log(fills.length, fills[0], grids[config.selected!][0]);
 				if (!fills.length || fills.length < 4 && fills[0] == grids[config.selected!][0]) {
+					gridUndos.push(copyStore(grids));
 					setGrids(produce((draft) => {
 						const selectedArr = draft[config.selected!];
 						const curArr = draft[i!];
 						const color = selectedArr.shift()!;
 						while (selectedArr[0] == color && curArr.length < 3) {
-							console.log(selectedArr[0]);
 							curArr.unshift(selectedArr.shift()!);
 						}
 						curArr.unshift(color);
-					}))
+					}));
 				}
 				return undefined;
-			}
-		}
-	]
+			},
+		},
+	];
 }

@@ -1,21 +1,14 @@
 import { For } from 'solid-js';
-import { createStore, produce, unwrap } from 'solid-js/store';
+import { createStore, produce } from 'solid-js/store';
 import { useConfig } from '~/hooks/ConfigContext';
 import { Dialog } from '@kobalte/core/dialog';
 import { NumberField } from '@kobalte/core/number-field';
 import { Checkbox } from '@kobalte/core/checkbox';
-
-function jsonCopy<T>(value: T): T {
-	return JSON.parse(
-		JSON.stringify(
-			value,
-		),
-	);
-}
+import copyStore from '~/utils/copyStore';
 
 export default function TheOptions(props: { recreate: () => void }): JSXElement {
 	const [config, setConfig] = useConfig();
-	const [values, setValues] = createStore(jsonCopy(unwrap(config)));
+	const [values, setValues] = createStore(copyStore(config));
 
 	const submit = () => {
 		setConfig(values);
