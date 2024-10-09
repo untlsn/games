@@ -17,7 +17,7 @@ export default function TheBottlesGrid(): JSXElement {
 	return (
 		<main class="flex-(~ wrap) justify-center gap-12 w-full p-4 relative">
 			<Show when={success()}>
-				<div class="absolute inset-0 size-full flex-(~ col) items-center justify-center gap-4">
+				<div class="absolute inset-0 size-full flex-(~ col) items-center justify-center gap-4 z-1">
 					<p class="text-10">Sukces</p>
 					<button type="button" onClick={onGrids.restart} class="border-(~ y-white/50 x-white/10) px-4 py-2 rounded hocus:bg-white/20 transition-colors">
 						Restart

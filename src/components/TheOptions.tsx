@@ -31,7 +31,7 @@ export default function TheOptions(): JSXElement {
 			</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Content
-					class="fixed inset-0 m-auto w-100 h-150 p-4 z-top text-white rounded bg-gradient-to-br from-([#2C1D33] 30%) to-[#2f205e]/70 border-(1 white/30) flex-(~ col) z-1"
+					class="fixed inset-0 m-auto w-100 h-150 p-4 z-top text-white rounded bg-gradient-to-br from-([#2C1D33] 30%) to-[#2f205e]/70 border-(1 white/30) flex-(~ col)"
 				>
 					<div class="flex justify-between text-xl mb-4">
 						<h2>Ustawienia</h2>
