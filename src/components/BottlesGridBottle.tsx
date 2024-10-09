@@ -18,11 +18,11 @@ export default function BottlesGridBottle(props: { fills: string[], onClick: () 
 			<For each={props.fills} children={(color, i) => {
 				return (
 					<div
-						style={{ '--background-color': color  }}
+						style={{ '--background-color': color, '--background-color-to': color+'66', }}
 						class={clsx(
 							'text-center pt-2',
 							!config.hidden || i() == 0 || (color == props.fills[0] && color == props.fills[i() - 1])
-								? 'bg-[var(--background-color)] text-transparent'
+								? 'bg-gradient-to-rb from-[--background-color] to-[--background-color-to] text-transparent'
 								: "bg-gradient-to-br from-[#61397c] to-[#2f205e]",
 						)}
 					>

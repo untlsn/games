@@ -15,7 +15,7 @@ export function createConfig(): StoreTuple<Config> {
 	return createStore<Config>({
 		colors: ['#FF0000', '#007F00', '#0000FF', '#FFA400', '#00FFFF', '#FFFF00'],
 		empty: 2,
-		hidden: true
+		hidden: false
 	})
 }
 
