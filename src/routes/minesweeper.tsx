@@ -1,4 +1,4 @@
-import { For, Match, Switch } from 'solid-js';
+import { For, Match, Show, Switch } from 'solid-js';
 import { Checkbox } from '@kobalte/core/checkbox';
 import clsx from 'clsx';
 import createMineStore from '~/hooks/createMineStore';
@@ -28,8 +28,13 @@ export default function ThePage(): JSXElement {
 				</nav>
 				<div
 					style={{ 'grid-template-columns': `repeat(${mineStore.width}, 1fr)` }}
-					class="w-fit grid gap-1 place-items-center mx-auto"
+					class="w-fit grid gap-1 place-items-center mx-auto relative"
 				>
+					<Show when={mineStore.failed}>
+						<div class="grid place-items-center absolute inset-0 size-full bg-black/33 z-top">
+							<p class="text-20">Przegrałeś</p>
+						</div>
+					</Show>
 					<For
 						each={mineStore.pool}
 						children={(it, i) => (
@@ -39,12 +44,12 @@ export default function ThePage(): JSXElement {
 									'size-5 rounded text-(center black) transition-all',
 									it.show ? 'bg-gray-2' : 'bg-gray-4',
 								)}
-								disabled={!mineStore.flagMode && it.show}
+								disabled={mineStore.failed || !mineStore.flagMode && it.show}
 								onClick={() => onMineStore.poolClick(i())}
 							>
 								<Switch>
 									<Match when={it.show}>
-										{it.value}
+										{it.value == 'x' ? <i class="i-ph-bomb-fill mt-px text-red-5" /> : it.value}
 									</Match>
 									<Match when={it.flag}>
 										<i class="i-ph-flag-pennant-fill text-red-5" />

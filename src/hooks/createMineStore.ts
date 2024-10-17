@@ -18,7 +18,7 @@ export default function createMineStore(width: number): StoreWithActions<MineSto
 				if (!current) return;
 
 				if (!draft.flagMode) {
-					if (!showEmptyRec(draft, index) && current.value != 'x') current.show = true;
+					if (!showEmptyRec(draft, index)) current.show = true;
 					return;
 				}
 
@@ -36,6 +36,11 @@ export default function createMineStore(width: number): StoreWithActions<MineSto
 
 				sibling.forEach((it) => showEmptyRec(draft, it));
 			}));
+			const failed = mineStore.pool.some((it) => it.value == 'x' && it.show);
+			if (!failed) return;
+
+			setMineStore('pool', (it) => it.value == 'x', 'show', true);
+			setMineStore('failed', true);
 		},
 		flagChange(newValue) {
 			setMineStore('flagMode', newValue);

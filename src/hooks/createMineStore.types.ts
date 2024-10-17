@@ -4,6 +4,7 @@ export type MineStore = {
 	pool:      PoolPoint[],
 	width:     number,
 	flagMode?: boolean,
+	failed?:   boolean
 };
 
 export type StoreWithActions<T, TActions> = [get: Store<T>, actions: TActions & { set: SetStoreFunction<T> }];
