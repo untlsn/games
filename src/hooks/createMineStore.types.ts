@@ -18,4 +18,5 @@ export type PoolPoint = {
 export type MineActions = {
 	poolClick:  (index: number) => void
 	flagChange: (newValue: boolean) => void
+	reset:      () => void
 };

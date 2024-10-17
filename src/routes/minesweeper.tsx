@@ -15,7 +15,7 @@ export default function ThePage(): JSXElement {
 			<div
 				class="border-(~ white/10) bg-white/2 w-98vw max-w-240"
 			>
-				<nav class="flex justify-center my-4">
+				<nav class="flex justify-center my-4 gap-4">
 					<Checkbox onChange={onMineStore.flagChange}>
 						<Checkbox.Control class="border-1 rounded p-1 size-8 text-center cursor-pointer">
 							<Checkbox.Indicator
@@ -25,6 +25,13 @@ export default function ThePage(): JSXElement {
 						</Checkbox.Control>
 						<Checkbox.Input />
 					</Checkbox>
+					<button
+						type="button"
+						class="border-1 rounded py-1 px-2 h-8"
+						onClick={onMineStore.reset}
+					>
+						Zresetuj
+					</button>
 				</nav>
 				<div
 					style={{ 'grid-template-columns': `repeat(${mineStore.width}, 1fr)` }}

@@ -1,4 +1,4 @@
-import { createStore, produce } from 'solid-js/store';
+import { createStore, produce, reconcile } from 'solid-js/store';
 import type { MineActions, MineStore, StoreWithActions } from '~/hooks/createMineStore.types';
 import { countBy, createPool, getValidSibling, showEmptyRec } from '~/hooks/createMineStore.utils';
 
@@ -44,6 +44,9 @@ export default function createMineStore(width: number): StoreWithActions<MineSto
 		},
 		flagChange(newValue) {
 			setMineStore('flagMode', newValue);
+		},
+		reset() {
+			setMineStore('pool', reconcile(createPool(30)));
 		},
 		set: setMineStore,
 	}];
