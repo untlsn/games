@@ -11,7 +11,13 @@ import {
 
 
 export default defineConfig({
-	theme: {
+	safelist: ['bg-bg-1'],
+	theme:    {
+		colors: {
+			bg: {
+				1: '#15051C',
+			},
+		},
 		zIndex: {
 			top: 999,
 		},

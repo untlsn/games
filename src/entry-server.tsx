@@ -9,9 +9,10 @@ export default createHandler(() => (
 					<meta charset="utf-8" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
 					<link rel="icon" href="/favicon.ico" />
+					<title>Untlsn-Games</title>
 					{assets}
 				</head>
-				<body class="min-h-screen bg-[#15051C] text-white">
+				<body class="min-h-screen bg-bg-1 text-white">
 					<div id="app">{children}</div>
 					{scripts}
 				</body>
