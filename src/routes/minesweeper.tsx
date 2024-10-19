@@ -2,6 +2,7 @@ import { For, Match, Show, Switch } from 'solid-js';
 import { Checkbox } from '@kobalte/core/checkbox';
 import clsx from 'clsx';
 import createMineStore from '~/hooks/createMineStore';
+import { Title } from '@solidjs/meta';
 
 
 export default function ThePage(): JSXElement {
@@ -9,6 +10,7 @@ export default function ThePage(): JSXElement {
 
 	return (
 		<div class="grid place-items-center min-h-screen">
+			<Title>Untlsn-Games - MineSweeper</Title>
 			<a href="/" class="i-ph-caret-left absolute left-12 top-12 text-8">
 				Strona główna
 			</a>
