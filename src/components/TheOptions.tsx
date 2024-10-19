@@ -40,13 +40,25 @@ export default function TheOptions(): JSXElement {
 						<h2>Ustawienia</h2>
 						<Dialog.CloseButton class="i-ph-x" />
 					</div>
-					<h3 class="mb-2">Kolory:</h3>
-					<ul class="flex-(~ wrap) gap-4 ml-4">
+					<div class="flex items-center justify-between mb-2">
+						<h3>Kolory:</h3>
+						<button
+							type="button"
+							class="border-(~ y-white/50 x-white/10) px-4 py-2 rounded hocus:bg-white/20 transition-colors"
+							onClick={() => {
+								setValues('colors', produce((draft) => {
+									draft.push('#ffffff');
+								}));
+							}}
+						>
+							Dodaj kolor
+						</button>
+					</div>
+					<ul class="flex-(~ wrap) gap-4 ml-4 max-h-44 overflow-y-auto overflow-x-hidden">
 						<For
 							each={values.colors}
 							children={(it, i) => (
-								<li>
-									<span>{i() + 1}. </span>
+								<li class="flex items-center">
 									<input
 										type="color"
 										value={it}
@@ -58,7 +70,7 @@ export default function TheOptions(): JSXElement {
 									/>
 									<button
 										type="button"
-										class="i-ph-x mb-2"
+										class="i-ph-x"
 										onClick={() => {
 											setValues('colors', (it) => it.toSpliced(i(), 1));
 										}}
@@ -68,18 +80,6 @@ export default function TheOptions(): JSXElement {
 								</li>
 							)}
 						/>
-						<li class="list-none">
-							<button
-								type="button"
-								onClick={() => {
-									setValues('colors', produce((draft) => {
-										draft.push('#ffffff');
-									}));
-								}}
-							>
-								Dodaj kolor
-							</button>
-						</li>
 					</ul>
 					<Show when={error()}>
 						<p class="text-red-6 my-4">{error()}</p>
